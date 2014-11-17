@@ -1,0 +1,15 @@
+---
+
+- name: Ajout du dépôt wheezy-backports
+  apt_repository: repo="deb http://http.debian.net/debian wheezy-backports main" state=present
+
+- name: Installation du paquet linux-image-amd64
+  apt: name=linux-image-amd64 default_release=wheezy-backports update_cache=yes cache_valid_time=360 state=present
+
+- shell: docker version
+  register: docker_version
+  ignore_errors: True
+
+- name: Installation de Docker
+  shell: curl -sSL https://get.docker.com/ | sh
+  when: docker_version|failed
